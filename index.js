@@ -240,7 +240,6 @@ Templates.extend(Assemble, {
     var views = load(glob, options);
     collection.addViews(views);
     return this.toStream(collection);
-    // return utils.vfs.src.apply(utils.vfs, arguments);
   },
 
   /**
@@ -271,8 +270,7 @@ Templates.extend(Assemble, {
    */
 
   dest: function () {
-    return utils.vfs.dest.apply(utils.vfs, arguments)
-      .on('data', function () {}); // TODO: fix this
+    return utils.dest.apply(utils.dest, arguments);
   },
 
   /**
