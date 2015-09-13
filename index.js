@@ -4,6 +4,7 @@
  * module dependencies
  */
 
+var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var runtimes = require('composer-runtimes');
@@ -224,8 +225,22 @@ Templates.extend(Assemble, {
    * @api public
    */
 
-  src: function () {
-    return utils.vfs.src.apply(utils.vfs, arguments);
+  src: function (glob, options) {
+    options = options || {};
+    var collection = this.collection();
+    var load = utils.load(function (file) {
+      if (options.read === false) return file;
+      if (options.buffer === false) {
+        file.contents = fs.createReadStream(file.path);
+        return file;
+      }
+      file.contents = fs.readFileSync(file.path);
+      return file;
+    });
+    var views = load(glob, options);
+    collection.addViews(views);
+    return this.toStream(collection);
+    // return utils.vfs.src.apply(utils.vfs, arguments);
   },
 
   /**
@@ -296,7 +311,12 @@ Templates.extend(Assemble, {
    */
 
   toStream: function (collection, fn) {
-    var views = this.getViews(collection) || {};
+    var views;
+    if (typeof collection === 'object' && collection.isCollection) {
+      views = collection.views;
+    } else {
+      views = this.getViews(collection) || {};
+    }
     var stream = utils.through.obj();
     setImmediate(function () {
       Object.keys(views).forEach(function (key) {
