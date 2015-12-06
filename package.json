@@ -50,7 +50,7 @@
     "assemble-utils": "^0.2.0",
     "chalk": "^1.0.0",
     "computed-property": "^0.1.2",
-    "engine-assemble": "^0.4.0",
+    "engine-assemble": "kapooostin/engine-assemble",
     "event-stream": "^3.3.0",
     "extend-shallow": "^1.1.2",
     "gulp-drafts": "^0.1.0",
